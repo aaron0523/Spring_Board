@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html 	lang="ko"
+         xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container" style="max-width: 1000px">
+    <div class="py-6 text-center" style="padding-top: 30px" >
+        <h2 >글 목록</h2>
+    </div>
+
+    <div class="row">
+        <div class="row">
+            <button class="btn btn-primary float-end"
+                    onclick="location.href='addPost.html'"
+                    th:onclick="|location.href='@{/board/savePage}'|"
+                    type="button" >글 등록</button>
+            <div class="col">
+                <div>현재 페이지: <label th:text="${pageInfo.currPage}"></label></div>
+                <div>현재 사용자: <label th:text="${currentUser}"></label></div>
+                <div>총 게시물 수: <label th:text="${pageInfo.totalPostCnt}"></label></div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 10%">no</th>
+                <th scope="col" >제목</th>
+                <th scope="col" style="width: 15%">작성자</th>
+                <th scope="col" style="width: 15%">등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${postList}"
+                onclick="location.href='detail.html'"
+                th:onclick= "|location.href='@{/board/detail/{postId}(postId=${post.id})}'|"
+                style="cursor:pointer">
+                <th scope="row" th:text="${post.id}">1</th>
+                <td th:text="${post.title}"</td>
+                <td th:text="${post.author}"></td>
+                <td th:text="${post.created_date}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br/>
+<div class="container">
+<nav aria-label="Page navigation example ">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" th:href="@{?page=1}" aria-label="Previous">
+                <span aria-hidden="true">처음</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" th:href="@{?page={page} (page = ${pageInfo.preBlock})}" aria-label="Previous">
+                <span aria-hidden="true">이전</span>
+            </a>
+        </li>
+        <th:block  th:with="start = ${pageInfo.startPage}, end = ${pageInfo.endPage}">
+            <li class="page-item"
+                th:with="start = ${pageInfo.startPage}, end = ${pageInfo.endPage}"
+                th:each="pageButton : ${#numbers.sequence(start, end)}">
+                <a class="page-link" th:href="@{?page={page} (page = ${pageButton})}" th:text=${pageButton}></a>
+            </li>
+        </th:block>
+        <li class="page-item">
+            <a class="page-link" th:href="@{?page={page} (page = ${pageInfo.nextBlock})}" aria-label="Next">
+                <span aria-hidden="true">다음</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" th:href="@{?page={page} (page = ${pageInfo.totalPageCnt})}" aria-label="Previous">
+                <span aria-hidden="true">끝</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</div>
+
+</body>
+</html>
